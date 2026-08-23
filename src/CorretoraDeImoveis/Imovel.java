@@ -85,4 +85,12 @@ public class Imovel {
     public String getProprietario() {
         return proprietario;
     }
+
+    public boolean isDisponivel() {
+        return disponivel;
+    }
+
+    public void setDisponivel(boolean disponivel) {
+        this.disponivel = disponivel;
+    }
 }

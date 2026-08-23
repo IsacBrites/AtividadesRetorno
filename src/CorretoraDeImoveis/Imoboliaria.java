@@ -64,4 +64,27 @@ public class Imoboliaria {
         }
     }
 
+    public Proposta fazerProposta(String cpfCliente, String codigoImovel, String creciCorretor, double valor){
+        Cliente cliente = buscarCliente(cpfCliente);
+        Imovel imovel = buscarImovel(codigoImovel);
+        Corretor corretor = buscarCorretor(creciCorretor);
+
+        Proposta proposta = new Proposta(proximoIdProposta, imovel, cliente, corretor, valor, LocalDate.now());
+        cliente.adicionarProposta(proximoIdProposta);
+        propostas.add(proposta);
+        proximoIdProposta++;
+        return proposta;
+
+    }
+
+    public void aceitarProposta(int id){
+        for (Proposta proposta : propostas){
+            if (proposta.getId() == id){
+                proposta.aceitar();
+                proposta.getImovel().setDisponivel(false);
+                proposta.getCorretor().registrarVenda();
+            }
+        }
+    }
+
 }
