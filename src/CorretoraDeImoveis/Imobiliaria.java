@@ -3,7 +3,7 @@ package CorretoraDeImoveis;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Imoboliaria {
+public class Imobiliaria {
     private String nome;
     private ArrayList<Imovel> imoveis;
     private ArrayList<Corretor> corretores;
@@ -11,7 +11,7 @@ public class Imoboliaria {
     private ArrayList<Proposta> propostas;
     private static int proximoIdProposta =1;
 
-    public Imoboliaria(String nome){
+    public Imobiliaria(String nome){
         this.nome = nome;
         this.imoveis = new ArrayList<>();
         this.corretores = new ArrayList<>();
