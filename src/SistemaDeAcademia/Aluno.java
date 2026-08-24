@@ -54,7 +54,64 @@ public class Aluno {
         avMaisAntiga = avaliacoesPeso.getFirst();
         avMaisRecente = avaliacoesPeso.getLast();
 
-        return avMaisAntiga.getPeso() - avMaisRecente.getPeso();
+        return avMaisRecente.getPeso()- avMaisAntiga.getPeso();
 
+    }
+
+    public int frequenciaMensal(LocalDate mesInicio, LocalDate mesFim){
+        int contador = 0;
+
+        for (LocalDate data : chekins){
+            if (!data.isAfter(mesFim) && !data.isBefore(mesInicio)){
+                contador++;
+            }
+        }
+        return contador;
+    }
+
+    public AvaliacaoFisica ultimaAvaliacao(){
+        ArrayList<AvaliacaoFisica> avaliacoeCopy = new ArrayList<>(avaliacoes);
+        if (avaliacoes.isEmpty()){
+            return null;
+        }
+
+        avaliacoeCopy.sort(Comparator.comparing(AvaliacaoFisica::getData));
+
+        return avaliacoes.getLast();
+    }
+
+    public void exibir(){
+        System.out.println("Nome do aluno: " + this.nome);
+        System.out.println("CPF do aluno: " + this.cpf);
+        System.out.println("Data da matrícula: " + this.dataMatricula);
+        System.out.println("Plano: " + this.plano.getNome());
+        System.out.println("Avaliacoes: " + this.avaliacoes);
+        System.out.println("Chekins: " + this.chekins);
+
+
+    }
+
+    public ArrayList<AvaliacaoFisica> getAvaliacoes() {
+        return avaliacoes;
+    }
+
+    public LocalDate getDataMatricula() {
+        return dataMatricula;
+    }
+
+    public Plano getPlano() {
+        return plano;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public ArrayList<LocalDate> getChekins() {
+        return chekins;
     }
 }
