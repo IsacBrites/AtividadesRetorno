@@ -83,4 +83,9 @@ public class Academia {
         media = totalChekins / this.alunos.size();
         return media;
     }
+
+    public ArrayList<Aluno> alunosComMelhorEvolucao(){
+        ArrayList<Aluno> alunosComMelhorEvolucao = new ArrayList<>();
+        for (Aluno aluno : this.alunos) {}
+    }
 }
