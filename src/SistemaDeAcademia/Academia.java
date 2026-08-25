@@ -1,6 +1,7 @@
 package SistemaDeAcademia;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Academia {
     private String nome;
@@ -85,7 +86,43 @@ public class Academia {
     }
 
     public ArrayList<Aluno> alunosComMelhorEvolucao(){
-        ArrayList<Aluno> alunosComMelhorEvolucao = new ArrayList<>();
-        for (Aluno aluno : this.alunos) {}
+
+        if (this.alunos.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        ArrayList<Aluno> ranking = new ArrayList<>(this.alunos);
+
+        ranking.sort(Comparator.comparingDouble(Aluno::perdaGanhoPeso));
+
+        int limite = Math.min(ranking.size(), 5);
+
+        return  new ArrayList<>(ranking.subList(0, limite));
+    }
+
+    public Plano planoMaisPopular(){
+        if (this.planos.isEmpty()) {
+            return null;
+        }
+
+        Plano planoMaisPopular = this.planos.get(0);
+        int numAlunos = alunosPorPlano(planoMaisPopular.getNome()).size();
+
+        for (Plano plano : this.planos) {
+            int quantidadeAtual = alunosPorPlano(plano.getNome()).size();
+            if (quantidadeAtual > numAlunos) {
+                numAlunos = quantidadeAtual;
+                planoMaisPopular = plano;
+            }
+        }
+        return planoMaisPopular;
+    }
+
+    public void relatorioGeral(){
+        System.out.println("Total de alunos: " + this.alunos.size());
+        System.out.println("Receita mensal: " +receitaMensalTotal());
+        System.out.println("Plano mais popular: "+planoMaisPopular().getNome());
+        System.out.println("Frequência média: "+ mediaFrequencia());
+        System.out.println("Alunos em destaque: "+alunosComMelhorEvolucao());
     }
 }

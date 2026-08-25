@@ -9,7 +9,7 @@ public class AvaliacaoFisica {
     private double massaMuscular;
     private double altura;
 
-    public AvaliacaoFisica(LocalDate data, double peso, double percentualDeGordura, double massaMuscular, double altura) {
+    public AvaliacaoFisica(LocalDate data, double peso) {
         this.data = data;
         this.peso = peso;
         this.percentualDeGordura = percentualDeGordura;
