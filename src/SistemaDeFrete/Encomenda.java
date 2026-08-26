@@ -82,6 +82,20 @@ public class Encomenda {
         status = Status.CONFIRMADO;
     }
 
+    public Cotacao maiorPreco(){
+        if(this.cotacoes.isEmpty()){
+            return null;
+        }
+
+        Cotacao maiorPreco = cotacoes.getFirst();
+
+        for(Cotacao cotacao : this.cotacoes){
+            if (cotacao.getValorFrete() > maiorPreco.getValorFrete()){
+                maiorPreco = cotacao;
+            }
+        }
+        return maiorPreco;
+    }
 
 
     public void exibirCotacoes(){
@@ -93,6 +107,10 @@ public class Encomenda {
         }
 
     }
+
+
+
+
 
     public String getCodigo() {
         return codigo;
@@ -124,5 +142,45 @@ public class Encomenda {
 
     public double getPesoKg() {
         return pesoKg;
+    }
+
+    public Transportadora getTransportadoraEscolhida() {
+        return transportadoraEscolhida;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public void setDestino(String destino) {
+        this.destino = destino;
+    }
+
+    public void setDistanciaKm(double distanciaKm) {
+        this.distanciaKm = distanciaKm;
+    }
+
+    public void setOrigem(String origem) {
+        this.origem = origem;
+    }
+
+    public void setCotacoes(ArrayList<Cotacao> cotacoes) {
+        this.cotacoes = cotacoes;
+    }
+
+    public void setPesoKg(double pesoKg) {
+        this.pesoKg = pesoKg;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void setTransportadoraEscolhida(Transportadora transportadoraEscolhida) {
+        this.transportadoraEscolhida = transportadoraEscolhida;
+    }
+
+    public void setValorFrete(double valorFrete) {
+        this.valorFrete = valorFrete;
     }
 }

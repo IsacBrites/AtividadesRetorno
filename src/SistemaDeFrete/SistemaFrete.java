@@ -1,34 +1,4 @@
 package SistemaDeFrete;
-//Crie uma classe SistemaFrete com:
-//- Atributos: transportadoras (ArrayList<Transportadora>), encomendas (ArrayList<Encomenda>)
-//- Método cadastrarTransportadora(Transportadora t)
-//- Método solicitarCotacoes(Encomenda e) que:
-//  - Para cada transportadora cadastrada
-//  - Calcula frete e prazo estimado
-//  - Cria cotação
-//  - Adiciona à encomenda
-//- Método processarEncomenda(Encomenda e, String criterio) que:
-//  - Se criterio = "preco": escolhe melhor preço
-//  - Se criterio = "prazo": escolhe melhor prazo
-//  - Se criterio = "custoBeneficio": escolhe melhor relação
-//  - Confirma escolha
-//- Método finalizarEntrega(String codigoEncomenda, boolean noPrazo) que:
-//  - Busca encomenda
-//  - Registra entrega na transportadora escolhida
-//- Método transportadoraMaisEscolhida() que:
-//  - Conta quantas vezes cada transportadora foi escolhida
-//  - Retorna a mais utilizada
-//- Método transportadoraMaisPontual() que retorna maior taxa de pontualidade
-//- Método economiaTotal() que:
-//  - Para cada encomenda, compara valor escolhido com o mais caro cotado
-//  - Soma a diferença (economia gerada)
-//- Método custoMedioFrete() que calcula média dos fretes confirmados
-//- Método relatorioGeral() que exibe:
-//  - Total de encomendas processadas
-//  - Transportadora mais utilizada
-//  - Transportadora mais pontual
-//  - Economia total gerada
-//  - Custo médio de frete
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -37,7 +7,19 @@ public class SistemaFrete {
     private ArrayList<Transportadora> transportadoras;
     private ArrayList<Encomenda> encomendas;
 
+    public SistemaFrete(){
+        transportadoras = new ArrayList<>();
+        encomendas = new ArrayList<>();
+    }
+
+    public void adicionarEncomenda(Encomenda encomenda) {
+        encomendas.add(encomenda);
+    }
+
     public void cadastrarTransportadora(Transportadora transportadora) {
+        if (transportadoras == null) {
+            return;
+        }
         this.transportadoras.add(transportadora);
     }
 
@@ -47,5 +29,104 @@ public class SistemaFrete {
             Cotacao cotacao = new Cotacao(transportadora, valorCalculado, transportadora.getPrazoMedioDias(), LocalDate.now());
             encomenda.adicionarCotacao(cotacao);
         }
+    }
+
+    public void processarEncomenda(Encomenda encomenda, Criterio criterio) {
+        Cotacao cotacaoEscolhida = null;
+        switch (criterio) {
+            case PRECO:
+                cotacaoEscolhida = encomenda.melhorPreco();
+                break;
+            case PRAZO:
+                cotacaoEscolhida = encomenda.melhorPrazo();
+                break;
+            case CUSTO_BENEFICIO:
+                cotacaoEscolhida =encomenda.melhorCustoBeneficio();
+                break;
+        }
+        if (cotacaoEscolhida != null) {
+            encomenda.escolherTransportadora(cotacaoEscolhida);
+        }
+    }
+
+    public void finalizarEntrega(String codigoEncomenda, boolean noPrazo){
+        for (Encomenda encomenda : this.encomendas) {
+            if (encomenda.getCodigo().equals(codigoEncomenda)) {
+                encomenda.getTransportadoraEscolhida().registrarEntrega(noPrazo);
+                encomenda.setStatus(Status.ENTREGUE);
+                return;
+            }
+        }
+    }
+
+    public Transportadora transportadoraMaisEscolhida(){
+        Transportadora transportadoraVencedora = null;
+        int recordeEscolhas = 0;
+        if (this.transportadoras == null) {
+            return null;
+        }
+
+        for (Transportadora transportadora : this.transportadoras) {
+            int contadorEscolhida = 0;
+
+            for (Encomenda encomenda : this.encomendas) {
+                if (encomenda.getTransportadoraEscolhida().equals(transportadora)) {
+                    contadorEscolhida++;
+
+                }
+            }
+            if (contadorEscolhida > recordeEscolhas) {
+                recordeEscolhas = contadorEscolhida;
+                transportadoraVencedora = transportadora;
+            }
+
+        }
+        return transportadoraVencedora;
+    }
+
+    public Transportadora transportadoraMaisPontual(){
+        Transportadora transportadoraVencedora = null;
+        double maiorTaxa = -1.0;
+        for (Transportadora transportadora : this.transportadoras) {
+            if (transportadora.taxaPontualidade()> maiorTaxa) {
+                transportadoraVencedora = transportadora;
+                maiorTaxa = transportadora.taxaPontualidade();
+            }
+        }
+        return transportadoraVencedora;
+    }
+
+    public double economiaTotal(){
+        double valorTotal = 0;
+        for (Encomenda encomenda : this.encomendas) {
+           if (encomenda.getStatus() != Status.PENDENTE) {
+               valorTotal += encomenda.maiorPreco().getValorFrete() - encomenda.getValorFrete();
+
+           }
+        }
+        return valorTotal;
+    }
+
+    public double custoMedioFrete(){
+        double soma = 0.0;
+        int contador = 0;
+        for (Encomenda encomenda : this.encomendas) {
+            if (encomenda.getStatus() != Status.PENDENTE) {
+                soma += encomenda.getValorFrete();
+                contador++;
+            }
+        }
+        if (contador == 0){
+            return 0.0;
+        }
+        return soma/contador;
+    }
+
+    public ArrayList<Encomenda> getEncomendas() {
+        return encomendas;
+    }
+
+    public ArrayList<Transportadora> getTransportadoras() {
+        return transportadoras;
     }
 }
