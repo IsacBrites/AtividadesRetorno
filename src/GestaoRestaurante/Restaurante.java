@@ -2,6 +2,7 @@ package GestaoRestaurante;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Restaurante {
     private String nome;
@@ -74,5 +75,95 @@ public class Restaurante {
                 break;
             }
         }
+    }
+
+    public ArrayList<Mesa> mesasDisponiveis() {
+        ArrayList<Mesa> disponiveis = new ArrayList<>();
+        for (Mesa mesa : mesas) {
+            if (!mesa.isOcupada()) {
+                disponiveis.add(mesa);
+            }
+        }
+        return disponiveis;
+    }
+
+    public ArrayList<Comanda> comandasAbertas() {
+        ArrayList<Comanda> abertas = new ArrayList<>();
+        for (Comanda comanda : comandas) {
+            if (comanda.isAberta()) {
+                abertas.add(comanda);
+            }
+        }
+        return abertas;
+    }
+
+    public double faturamentoTotal() {
+        double total = 0;
+        for (Comanda comanda : comandas) {
+            if (!comanda.isAberta()) {
+                total += comanda.calcularTotal();
+            }
+        }
+        return total;
+    }
+
+    public double ticketMedio() {
+        int totalFechadas = 0;
+        for (Comanda comanda : comandas) {
+            if (!comanda.isAberta()) {
+                totalFechadas++;
+            }
+        }
+        if (totalFechadas == 0) return 0;
+        return faturamentoTotal() / totalFechadas;
+    }
+
+    public Garcom garcomMaisGorjetas() {
+        if (garcons.isEmpty()) return null;
+        Garcom destaque = garcons.get(0);
+        for (Garcom garcom : garcons) {
+            if (garcom.getGorjetasRecebidas() > destaque.getGorjetasRecebidas()) {
+                destaque = garcom;
+            }
+        }
+        return destaque;
+    }
+
+    public double tempoMedioAtendimento() {
+        long somaTempo = 0;
+        int totalFechadas = 0;
+        for (Comanda comanda : comandas) {
+            if (!comanda.isAberta()) {
+                somaTempo += comanda.tempoAtendimento();
+                totalFechadas++;
+            }
+        }
+        if (totalFechadas == 0) return 0;
+        return (double) somaTempo / totalFechadas;
+    }
+
+    public String itemMaisPedido(){
+        int quantidade = 0;
+        String nome = "";
+        HashMap<String, Integer> busca = new HashMap<>();
+        for (Comanda comanda : comandas) {
+            for (ItemComanda item : comanda.getItens()){
+                quantidade = item.getQuantidade();
+                nome = item.getNome();
+                busca.put(nome, busca.getOrDefault(nome, 0) + quantidade);
+            }
+        }
+        int maiorQuantidade = 0;
+        String nomeMaisPedido = "";
+        if (busca.isEmpty()) {
+            return "";
+        }
+        for (String key : busca.keySet()) {
+            if (busca.get(key) > maiorQuantidade) {
+                maiorQuantidade = busca.get(key);
+                nomeMaisPedido = key;
+            }
+        }
+        return nomeMaisPedido;
     }
 }

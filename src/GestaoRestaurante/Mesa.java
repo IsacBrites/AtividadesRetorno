@@ -36,11 +36,13 @@ public class Mesa {
         return capacidade;
     }
 
-    public boolean isOcupada() {
-        return ocupada;
-    }
+
 
     public Garcom getGarcomResponsavel() {
         return garcomResponsavel;
+    }
+
+    public boolean isOcupada(){
+        return ocupada;
     }
 }

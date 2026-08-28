@@ -100,4 +100,8 @@ public class Comanda {
     public Mesa getMesa() {
         return mesa;
     }
+
+    public boolean isAberta() {
+        return aberta;
+    }
 }
