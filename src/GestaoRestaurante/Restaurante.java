@@ -166,4 +166,46 @@ public class Restaurante {
         }
         return nomeMaisPedido;
     }
+
+    public String categoriaMaisVendida(){
+        int quantidade = 0;
+        String nome = "";
+        HashMap<String, Integer> busca = new HashMap<>();
+
+        for (Comanda comanda : comandas) {
+            for (ItemComanda item : comanda.getItens()){
+                quantidade = item.getQuantidade();
+                nome = item.getCategoria().toString();
+                busca.put(nome, busca.getOrDefault(nome, 0) + quantidade);
+            }
+        }
+        int maiorQuantidade = 0;
+        String categoriaMaisVendida = "";
+        if (busca.isEmpty()) {
+            return "";
+        }
+        for (String key : busca.keySet()) {
+            if (busca.get(key) > maiorQuantidade) {
+                maiorQuantidade = busca.get(key);
+                categoriaMaisVendida = key;
+            }
+        }
+        return categoriaMaisVendida;
+    }
+
+    public int totalMesas(){
+        if (mesas.isEmpty()) return 0;
+        return mesas.size() - mesasDisponiveis().size();
+    }
+
+
+    Garcom destaque = garcomMaisGorjetas();
+
+        public void relatorioGeral(){
+        System.out.println("Total de mesas: "+mesas.size() + " Disponíveis: "+mesasDisponiveis().size() + " Ocupadas: "+ totalMesas());
+        System.out.println("Faturamento total: "+faturamentoTotal());
+        System.out.println("Ticket medio: "+ticketMedio());
+        System.out.println("Item mais pedido: "+itemMaisPedido());
+        System.out.println("Garçom em destaque? "+ (destaque!=null ? destaque.getNome(): "Nenhum"));
+    }
 }

@@ -3,6 +3,6 @@ package GestaoRestaurante;
 public enum Categoria {
     BEBIDA,
     ENTRADA,
-    PRATO,
+    PRATO_PRINCIPAL,
     SOBREMESA
 }
