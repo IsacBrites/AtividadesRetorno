@@ -22,7 +22,6 @@ public class TesteRestaurante {
             restaurante.cadastrarGarcom(new Garcom( nomesGarcons[i]));
         }
 
-        // Cardápio base ajustado para a ordem: (nome, quantidade, precoUnitario, categoria)
         ItemComanda[] cardapio = {
                 new ItemComanda("Refrigerante", 1, 7.0, Categoria.BEBIDA),
                 new ItemComanda("Suco Natural", 1, 9.0, Categoria.BEBIDA),
@@ -36,7 +35,6 @@ public class TesteRestaurante {
 
         LocalTime horaAtual = LocalTime.of(11, 30);
 
-        // 3. Abrir 60 comandas ao longo do dia com rodízio automático
         for (int i = 1; i <= 60; i++) {
             int numeroMesa = ((i - 1) % 25) + 1;
             horaAtual = horaAtual.plusMinutes(8);
@@ -44,13 +42,11 @@ public class TesteRestaurante {
             Comanda comanda = restaurante.abrirComanda(numeroMesa, horaAtual);
 
             if (comanda != null) {
-                // 4. Adicionar de 3 a 8 itens por comanda
                 int qtdItensDiferentes = 3 + random.nextInt(6);
                 for (int j = 0; j < qtdItensDiferentes; j++) {
                     ItemComanda modelo = cardapio[random.nextInt(cardapio.length)];
                     int quantidadePedida = 1 + random.nextInt(3);
 
-                    // Instanciação seguindo a ordem (nome, quantidade, precoUnitario, categoria)
                     ItemComanda novoItem = new ItemComanda(
                             modelo.getNome(),
                             quantidadePedida,
@@ -60,7 +56,6 @@ public class TesteRestaurante {
                     restaurante.adicionarPedido(comanda.getNumero(), novoItem);
                 }
 
-                // 5. Fechar as primeiras 50 comandas
                 if (i <= 50) {
                     LocalTime horaFechamento = horaAtual.plusHours(1).plusMinutes(random.nextInt(30));
                     double gorjeta = 5.0 + (random.nextDouble() * 25.0);
