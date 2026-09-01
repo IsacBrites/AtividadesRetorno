@@ -67,6 +67,6 @@ public class Equipamento {
     }
     public void setModelo(String modelo) {
         this.modelo = modelo;
-
     }
+    is
 }
