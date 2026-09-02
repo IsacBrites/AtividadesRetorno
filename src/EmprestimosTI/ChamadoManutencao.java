@@ -59,5 +59,9 @@ public class ChamadoManutencao {
     public String getProblema() {
         return problema;
     }
+
+    public boolean isResolvido() {
+        return resolvido;
+    }
 }
 

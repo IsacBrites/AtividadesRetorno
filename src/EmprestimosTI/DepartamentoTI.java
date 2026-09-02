@@ -1,6 +1,7 @@
 package EmprestimosTI;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class DepartamentoTI {
@@ -63,6 +64,18 @@ public class DepartamentoTI {
         return null;
     }
 
+    public ChamadoManutencao buscarChamado(int id){
+        if (this.chamadoManutencao.isEmpty()) {
+            return null;
+        }
+        for (ChamadoManutencao chamadoManutencao : this.chamadoManutencao) {
+            if (chamadoManutencao.getId() == id) {
+                return chamadoManutencao;
+            }
+        }
+        return null;
+    }
+
     public Emprestimo emprestarEquipamento(String matricula, String patrimonio, LocalDate data){
 
         Funcionario funcionario = this.buscarFuncionario(matricula);
@@ -99,4 +112,68 @@ public class DepartamentoTI {
         }
         return null;
     }
+
+    public void resolverChamado(int idChamado, LocalDate data, double custo){
+        ChamadoManutencao chamado = this.buscarChamado(idChamado);
+        if (chamado != null && !chamado.isResolvido()){
+            chamado.resolver(data, custo);
+        }
+    }
+
+    public ArrayList<Equipamento> equipamentosDisponiveis(Tipo tipo){
+        ArrayList<Equipamento> equipamentosDisponiveis = new ArrayList<>();
+        for (Equipamento equipamento : this.equipamentos) {
+            if (equipamento.getTipo().equals(tipo)&&equipamento.isDisponivel()){
+                equipamentosDisponiveis.add(equipamento);
+            }
+        }
+        return equipamentosDisponiveis;
+    }
+
+    public ArrayList<Emprestimo> emprestimosAtrasados(LocalDate data){
+        ArrayList<Emprestimo> emprestimosAtrasados = new ArrayList<>();
+        for (Emprestimo emprestimo : this.emprestimos) {
+            if (emprestimo.estaAtrasado(data)){
+                emprestimosAtrasados.add(emprestimo);
+            }
+        }
+        return emprestimosAtrasados;
+    }
+
+    public double custoTotalManutencao(){
+        double total = 0.0;
+        for(ChamadoManutencao chamadoManutencao : this.chamadoManutencao){
+            if (chamadoManutencao.isResolvido()){
+                total += chamadoManutencao.getCustoReparo();
+            }
+        }
+        return total;
+    }
+
+    private int contarChamadosDoEquipamento(Equipamento equipamento) {
+        int total = 0;
+        for (ChamadoManutencao chamado : this.chamadoManutencao) {
+            if (chamado.getEquipamento().equals(equipamento)) {
+                total++;
+            }
+        }
+        return total;
+    }
+
+    public double tempoMedioResolucaoChamado(){
+        long somaDias = 0;
+        int totalResolvidos = 0;
+
+        for (ChamadoManutencao chamadoManutencao : this.chamadoManutencao) {
+            if (chamadoManutencao.isResolvido()){
+                somaDias += ChronoUnit.DAYS.between(chamadoManutencao.getDataAbertura(), chamadoManutencao.getDataResolucao());
+                totalResolvidos++;
+            }
+        }
+        if (totalResolvidos == 0){
+            return 0;
+        }
+        return (double) somaDias/totalResolvidos;
+    }
+
 }
