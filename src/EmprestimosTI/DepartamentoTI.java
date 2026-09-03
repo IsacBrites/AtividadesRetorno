@@ -176,4 +176,37 @@ public class DepartamentoTI {
         return (double) somaDias/totalResolvidos;
     }
 
+    public void resumoSistema() {
+        int equipamentosDisponiveis = 0;
+        for (Equipamento eq : this.equipamentos) {
+            if (eq.isDisponivel()) {
+                equipamentosDisponiveis++;
+            }
+        }
+
+        int chamadosResolvidos = 0;
+        for (ChamadoManutencao chamado : this.chamadoManutencao) {
+            if (chamado.isResolvido()) {
+                chamadosResolvidos++;
+            }
+        }
+        int chamadosAbertos = this.chamadoManutencao.size() - chamadosResolvidos;
+
+        System.out.println("       RESUMO DO DEPARTAMENTO DE TI       ");
+        System.out.println("INVENTÁRIO E PESSOAL:");
+        System.out.println(" - Equipamentos Cadastrados: " + this.equipamentos.size());
+        System.out.println(" - Equipamentos Disponíveis: " + equipamentosDisponiveis);
+        System.out.println(" - Funcionários Cadastrados: " + this.funcionarios.size());
+        System.out.println();
+        System.out.println("OPERAÇÃO DE EMPRÉSTIMOS:");
+        System.out.println(" - Histórico de Empréstimos: " + this.emprestimos.size());
+        System.out.println(" - Empréstimos Atrasados Hoje: " + emprestimosAtrasados(LocalDate.now()).size());
+        System.out.println();
+        System.out.println("SUPORTE E MANUTENÇÃO:");
+        System.out.println(" - Total de Chamados: " + this.chamadoManutencao.size());
+        System.out.println("   * Em Aberto: " + chamadosAbertos);
+        System.out.println("   * Resolvidos: " + chamadosResolvidos);
+        System.out.println(" - Tempo Médio de Resolução: " + String.format("%.1f", tempoMedioResolucaoChamado()) + " dias");
+        System.out.println(" - Custo Acumulado em Reparos: R$ " + String.format("%.2f", custoTotalManutencao()));
+    }
 }
